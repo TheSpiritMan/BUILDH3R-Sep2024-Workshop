@@ -348,3 +348,5 @@
 - Links: 
     - Aleo Program: [https://testnet.aleo.info/program/sandabgc_leo_auction.aleo](https://testnet.aleo.info/program/sandabgc_leo_auction.aleo)
     - Deploy Txn: [https://testnet.aleo.info/transition/au1futc3xm2jj8pffn6uz3c7thna9uyzyrxfg4ncca554t3gram7cqsnlu6m0](https://testnet.aleo.info/transition/au1futc3xm2jj8pffn6uz3c7thna9uyzyrxfg4ncca554t3gram7cqsnlu6m0) 
+
+    <img src="./Assets/testnet-program.png">
