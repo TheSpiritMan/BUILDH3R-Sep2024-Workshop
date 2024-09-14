@@ -283,6 +283,55 @@
 
     - According to above outputs, a/c with `Address`: `aleo1pamgdq88tvutdl27yrvyzangzya3e8qjdjwcrayrdmaeh8yd5cxqfj3kfh` is the winner and is new owner.
 
+#### Claim Bid:
+- Now, the value of `PRIVATE_KEY` in `.env` must be replaced with the `PRIVATE_KEY` of the owner `aleo1pamgdq88tvutdl27yrvyzangzya3e8qjdjwcrayrdmaeh8yd5cxqfj3kfh`.
+- Run `claim` transaction:
+    - Code Snippet:
+        ```sh
+        leo run claim <Finish_Bid>
+        ```
+    
+    - Command:
+        ```sh
+        leo run claim '{
+        owner: aleo1pamgdq88tvutdl27yrvyzangzya3e8qjdjwcrayrdmaeh8yd5cxqfj3kfh.private,
+        bidder: aleo1pamgdq88tvutdl27yrvyzangzya3e8qjdjwcrayrdmaeh8yd5cxqfj3kfh.private,
+        amount: 60u64.private,
+        is_winner: true.private,
+        _nonce: 7834300156119993338847256595349412827976344486679347902047430990163050189616group.public
+        }'
+        ```
+        <details><summary> Detailed Output </summary><blockquote>
+
+        ~~~
+        $ leo run claim '{
+        owner: aleo1pamgdq88tvutdl27yrvyz> angzya3e8qjdjwcrayrdmaeh8yd5cxqfj3kfh.private,
+        bid> der: aleo1pamgdq88tvutdl27yrvyzangzya3e8qjdjwcrayrdmaeh8yd5cxqfj3kfh.private,
+        amount: 60u64.private,> 
+        is_winner: true.private,
+        _nonce: 7834300156119993> > 338847256595349412827976344486679347902047430990163050189616group.public
+        }'> 
+            Leo ✅ Compiled 'sandabgc_leo_auction.aleo' into Aleo instructions
+
+        ⛓  Constraints
+
+        •  'sandabgc_leo_auction.aleo/claim' - 2,021 constraints (called 1 time)
+
+        ➡️  Output
+
+        • {
+        owner: aleo1pamgdq88tvutdl27yrvyzangzya3e8qjdjwcrayrdmaeh8yd5cxqfj3kfh.private,
+        amount: 60u64.private,
+        _nonce: 3692408662133577277974215449217403627688798853307095117158178224656233133749group.public
+        }
+
+            Leo ✅ Finished 'sandabgc_leo_auction.aleo/claim'
+        ~~~
+
+        </blockquote></details>
+       
+        <img src="./Assets/claim-bid.png">
+
 #### Deploy To Testnet:
 - Command:
     ```sh
