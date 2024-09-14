@@ -1,7 +1,4 @@
 # BUILDH3R Sept Leo
-- Discord Link for Use-Case: [https://discord.com/channels/1125877344972849232/1284452543941972028](https://discord.com/channels/1125877344972849232/1284452543941972028)
-- [Use-Case Docs](./Discord-Use-Case.md) 
-
 
 ## System Setup
 -  Install `rust` locally. Below command will install cli. [More deatils](https://www.rust-lang.org/tools/install)

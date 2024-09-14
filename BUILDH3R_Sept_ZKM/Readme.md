@@ -1,5 +1,8 @@
 # BUILDH3R_Sept_ZKM
 
+- Discord Link for Use-Case: [https://discord.com/channels/1125877344972849232/1284452543941972028](https://discord.com/channels/1125877344972849232/1284452543941972028)
+- [Use-Case Docs](./Discord-Use-Case.md) 
+
 ## System Setup
 - I am using Local VM with Hardware Spec:
   - 32 GB RAM
