@@ -1,9 +1,17 @@
 # BUILDH3R_Sept_ZKM
 
 ## System Setup
+- I am using Local VM with Hardware Spec:
+  - 32 GB RAM
+  - 16 vCPU
+  - 60GB SSD
+
 -  Install `rust` locally. Below command will install cli. [More deatils](https://www.rust-lang.org/tools/install)
     ```sh
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+    rustup install nightly
+    rustup default nightly
+    rustc --version
     ```
 - Install Go `v1.22.5`. Below command will install cli. [More deatils](https://www.rust-lang.org/tools/install)
     ```sh
@@ -165,7 +173,7 @@
   cp $HOME/gnark-plonky2-verifier/testdata/mips/snark_proof_with_public_inputs.json $HOME/gnark-plonky2-verifier/hardhat/test/snark_proof_with_public_inputs.json
   ```
 
-- Modify Token and Token Symbol in `$HOME/gnark-plonky2-verifier/hardhat/contracts/erc20.sol`:
+- Modify `Token Name` and `Token Symbol` in `$HOME/gnark-plonky2-verifier/hardhat/contracts/erc20.sol`:
   ```sh
   constructor()  {
       _name = "<Token Name>";
@@ -176,23 +184,34 @@
   }
   ```
 
+- In my case:
+  ```sh
+  constructor()  {
+      _name = "Final Test Token";
+      _symbol = "FTT";
+      _decimals = 18;
+      _totalSupply = 0;
+      _verifier = new Verifier();
+  }
+  ```
+
 - Compile contract:
   ```sh
-   #!/bin/bash     
-   cd $HOME/gnark-plonky2-verifier/hardhat/
-   rm -rf ignition/deployments artifacts cache
-   npx hardhat compile || { echo "Failed to compile"; exit 1; }
-   npx hardhat node &
-   sleep 5
-   HARDHAT_NODE_PID=$(ss -tulpn | grep :8545 | awk '{print $7}' | cut -d',' -f2 | cut -d'=' -f2)
-   npx hardhat test || { 
-   echo "Tests failed"; 
-   kill -9 $HARDHAT_NODE_PID
-   exit 1 
-   }
-   kill -9 $HARDHAT_NODE_PID
-   wait $HARDHAT_NODE_PID 2>/dev/null
-   echo "Hardhat node stopped"
+  #!/bin/bash     
+  cd $HOME/gnark-plonky2-verifier/hardhat/
+  rm -rf ignition/deployments artifacts cache
+  npx hardhat compile || { echo "Failed to compile"; exit 1; }
+  npx hardhat node &
+  sleep 5
+  HARDHAT_NODE_PID=$(ss -tulpn | grep :8545 | awk '{print $7}' | cut -d',' -f2 | cut -d'=' -f2)
+  npx hardhat test || { 
+  echo "Tests failed"; 
+  kill -9 $HARDHAT_NODE_PID
+  exit 1 
+  }
+  kill -9 $HARDHAT_NODE_PID
+  wait $HARDHAT_NODE_PID 2>/dev/null
+  echo "Hardhat node stopped"
   ```
 
 ## Deploy Verifier Contract:
@@ -206,20 +225,23 @@
     <details><summary> Detailed Output </summary><blockquote>
 
     ~~~
-    ubuntu@ZKM:~/gnark-plonky2-verifier/hardhat$ npx hardhat ignition deploy ./ignition/modules/erc20.js --network sepolia
-    ✔ Confirm deploy to network sepolia (11155111)?  yes
-    Hardhat Ignition 🚀
+	ubuntu@ZKM:~/gnark-plonky2-verifier/hardhat$ cd $HOME/gnark-plonky2-verifier/hardhat/
+	npx hardhat ignition deploy ./ignition/modules/erc20.js --network sepolia
+	✔ Confirm deploy to network sepolia (11155111)? … yes
+	Hardhat Ignition 🚀
 
-    Deploying [ ERC20Token ]
+	Resuming existing deployment from ./ignition/deployments/chain-11155111
 
-    Batch #1
-      Executed ERC20Token#ERC20Token
+	Deploying [ ERC20Token ]
 
-    [ ERC20Token ] successfully deployed 🚀
+	Batch #1
+	Executed ERC20Token#ERC20Token
 
-    Deployed Addresses
+	[ ERC20Token ] successfully deployed 🚀
 
-    ERC20Token#ERC20Token - 0x5694e6540b1FFd48CEbb5444F7c1bBf5554453c7
+	Deployed Addresses
+
+	ERC20Token#ERC20Token - 0xFbE4958a61d4C45DbDFfB23050721e1D9622b781
     ~~~
 
     </blockquote></details>
@@ -229,25 +251,26 @@
 - Command:
   ```sh
   cd $HOME/gnark-plonky2-verifier
-  ./gnark_sol_caller verify 0x5694e6540b1FFd48CEbb5444F7c1bBf5554453c7
+  ./gnark_sol_caller verify 0xFbE4958a61d4C45DbDFfB23050721e1D9622b781
   ```
 - Output:
     <details><summary> Detailed Output </summary><blockquote>
 
     ~~~
-    ubuntu@ZKM:~/gnark-plonky2-verifier$ ./gnark_sol_caller verify 0x5694e6540b1FFd48CEbb5444F7c1bBf5554453c7
-    2024/09/13 19:01:32 verify proof txHash: 0x2e72a7db7befabb80c6d097ab2aa3a3a57f4b7377b71298d8331f2c51404fe38
+    ubuntu@ZKM:~/gnark-plonky2-verifier/hardhat$ cd $HOME/gnark-plonky2-verifier
+	./gnark_sol_caller verify 0xFbE4958a61d4C45DbDFfB23050721e1D9622b781
+	2024/09/14 08:22:56 verify proof txHash: 0x73b17a1061c09de42ab94868710d05a03452bdaf5a265e3fed32ab848cbc3a9d
     ~~~
 
     </blockquote></details>
 
-- Txn: `0x2e72a7db7befabb80c6d097ab2aa3a3a57f4b7377b71298d8331f2c51404fe38`
-- Link: [https://sepolia.etherscan.io/tx/0x2e72a7db7befabb80c6d097ab2aa3a3a57f4b7377b71298d8331f2c51404fe38](https://sepolia.etherscan.io/tx/0x2e72a7db7befabb80c6d097ab2aa3a3a57f4b7377b71298d8331f2c51404fe38)
+- Txn: `0x73b17a1061c09de42ab94868710d05a03452bdaf5a265e3fed32ab848cbc3a9d`
+- Link: [https://sepolia.etherscan.io/tx/0x73b17a1061c09de42ab94868710d05a03452bdaf5a265e3fed32ab848cbc3a9d](https://sepolia.etherscan.io/tx/0x73b17a1061c09de42ab94868710d05a03452bdaf5a265e3fed32ab848cbc3a9d)
 
 
 # Perform On-Chain Action
 - Here, we wiill mint ERC20 Token.
-- Import `0x5694e6540b1FFd48CEbb5444F7c1bBf5554453c7` contract into Metamask wallet:
+- Import `0xFbE4958a61d4C45DbDFfB23050721e1D9622b781` contract into Metamask wallet:
 
     <img src="./Assets/import-contract.png">
 
@@ -517,7 +540,8 @@
     ~~~
 
     </blockquote></details>
-- ENV:
+
+- Set ENV:
   ```sh
   export PRIVATE_KEY=<redacted>
   export ERC20_TOKEN_ADDR=<redacted>
@@ -525,16 +549,28 @@
 
 - Remember, private_key must exclude `0x`.
 
-- Build:
+- Build Command:
+
   ```sh
   cd $HOME/use-cases/erc20/
   go build caller.go
   ```
 
-- Mint:
+  <details><summary> Detailed Output </summary><blockquote>
+
+  ~~~
+  ubuntu@ZKM:~/use-cases/erc20$ cd $HOME/use-cases/erc20/
+  go build caller.go
+  go: downloading github.com/consensys/gnark v0.10.0
+  go: downloading github.com/consensys/gnark-crypto v0.12.2-0.20240215234832-d72fcb379d3e
+  ~~~
+
+  </blockquote></details>
+
+- Mint Token:
   - Syntax:
     ```sh
-	cd $HOME/use-cases/erc20/
+    cd $HOME/use-cases/erc20/
     ./caller mint <ERC20_WALLET_ADDR>
     ```
 
@@ -542,10 +578,11 @@
     <details><summary> Detailed Output </summary><blockquote>
 
     ~~~
-    ubuntu@ZKM:~/gnark-plonky2-verifier/erc20$ ./caller mint 0xc5f2517C33E48a2CB0081E2fCa2a5FA699b2cd39
-    name: Sandab GC ZKM Token
+    ubuntu@ZKM:~/use-cases/erc20$ cd $HOME/use-cases/erc20/
+    ./caller mint  0xc5f2517C33E48a2CB0081E2fCa2a5FA699b2cd39
+    name: Final Test Token
     Total Supply: 0
-    2024/09/13 20:39:35 Mint with proof txHash: 0x19af7b21a7f85fb501c2af175454475ab46e52f4d68b4a773f47a86e6bd2e4d8
+    2024/09/14 08:29:40 Mint with proof txHash: 0x137896b07c0f20d296f7290081a7b468d462f7942a09d838217c88784c0c432b
     ~~~
 
     </blockquote></details>
@@ -553,10 +590,17 @@
     <img src="./Assets/mint-token.png">
 
   - Here, 
-    - TXN Hash: `0x19af7b21a7f85fb501c2af175454475ab46e52f4d68b4a773f47a86e6bd2e4d8`
-    - Explorer Link: [https://sepolia.etherscan.io/tx/0x19af7b21a7f85fb501c2af175454475ab46e52f4d68b4a773f47a86e6bd2e4d8](https://sepolia.etherscan.io/tx/0x19af7b21a7f85fb501c2af175454475ab46e52f4d68b4a773f47a86e6bd2e4d8)
+    - TXN Hash: `0x137896b07c0f20d296f7290081a7b468d462f7942a09d838217c88784c0c432b`
+    - Explorer Link: [https://sepolia.etherscan.io/tx/0x137896b07c0f20d296f7290081a7b468d462f7942a09d838217c88784c0c432b](https://sepolia.etherscan.io/tx/0x137896b07c0f20d296f7290081a7b468d462f7942a09d838217c88784c0c432b)
 
 
 - Verify in Metamask:
 
     <img src="./Assets/mint-verify-metamask.png">
+
+
+## Artifacts:
+- Save all the artifacts:
+    ```sh
+    cp -r $HOME/verifier $HOME/artifacts
+    ```
