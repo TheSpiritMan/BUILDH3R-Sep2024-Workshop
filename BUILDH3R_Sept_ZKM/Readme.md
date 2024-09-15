@@ -605,5 +605,5 @@
 ## Artifacts:
 - Save all the artifacts:
     ```sh
-    cp -r $HOME/verifier $HOME/artifacts
+    cp -r $HOME/verifier $HOME/Artifacts
     ```
